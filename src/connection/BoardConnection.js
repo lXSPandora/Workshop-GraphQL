@@ -3,12 +3,11 @@
 import { GraphQLInt } from 'graphql';
 
 import { connectionDefinitions } from 'graphql-relay';
-
-import UserType from '../type/UserType';
+import BoardType from '../type/BoardType';
 
 export default connectionDefinitions({
-  name: 'User',
-  nodeType: UserType,
+  name: 'Board',
+  nodeType: BoardType,
   connectionFields: {
     count: {
       type: GraphQLInt,

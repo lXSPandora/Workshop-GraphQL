@@ -4,11 +4,11 @@ import { GraphQLInt } from 'graphql';
 
 import { connectionDefinitions } from 'graphql-relay';
 
-import UserType from '../type/UserType';
+import TodoType from '../type/TodoType';
 
 export default connectionDefinitions({
-  name: 'User',
-  nodeType: UserType,
+  name: 'Todo',
+  nodeType: TodoType,
   connectionFields: {
     count: {
       type: GraphQLInt,
