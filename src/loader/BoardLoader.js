@@ -49,6 +49,19 @@ export const load = async (context: GraphQLContext, id: string): Promise<?Board>
 
 export const clearCache = ({ dataloaders }: GraphQLContext, id: string) => dataloaders.BoardLoader.clear(id.toString());
 
+export const loadUserBoards = (context: GraphQLContext, args: ConnectionArguments, userId: string) => {
+  const Boards = BoardModel.find({
+    userId,
+  });
+
+  return connectionFromMongoCursor({
+    cursor: Boards,
+    context,
+    args,
+    loader: load,
+  });
+};
+
 export const loadBoards = async (context: GraphQLContext, args: ConnectionArguments) => {
   const Boards = BoardModel.find({});
 
