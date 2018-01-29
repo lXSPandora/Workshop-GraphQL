@@ -11,6 +11,7 @@ import graphqlBatchHttpWrapper from 'koa-graphql-batch';
 import logger from 'koa-logger';
 import Router from 'koa-router';
 import { print } from 'graphql/language';
+import { koaPlayground } from 'graphql-playground-middleware';
 
 import { schema } from './schema';
 import { jwtSecret } from './config';
@@ -22,14 +23,16 @@ const router = new Router();
 
 app.keys = jwtSecret;
 
-const graphqlSettingsPerReq = async (req) => {
-
+const graphqlSettingsPerReq = async req => {
   const { user } = await getUser(req.header.authorization);
 
-  const dataloaders = Object.keys(loaders).reduce((dataloaders, loaderKey) => ({
-    ...dataloaders,
-    [loaderKey]: loaders[loaderKey].getLoader(),
-  }), {});
+  const dataloaders = Object.keys(loaders).reduce(
+    (dataloaders, loaderKey) => ({
+      ...dataloaders,
+      [loaderKey]: loaders[loaderKey].getLoader(),
+    }),
+    {},
+  );
 
   return {
     graphiql: process.env.NODE_ENV !== 'production',
@@ -44,7 +47,7 @@ const graphqlSettingsPerReq = async (req) => {
       console.log(variables);
       console.log(result);
     },
-    formatError: (error) => {
+    formatError: error => {
       console.log(error.message);
       console.log(error.locations);
       console.log(error.stack);
@@ -65,9 +68,15 @@ router.all('/graphql/batch', bodyParser(), graphqlBatchHttpWrapper(graphqlServer
 
 // graphql standard route
 router.all('/graphql', graphqlServer);
-
 app.use(logger());
 app.use(cors());
 app.use(router.routes()).use(router.allowedMethods());
+
+router.all(
+  '/playground',
+  koaPlayground({
+    endpoint: '/graphql',
+  }),
+);
 
 export default app;

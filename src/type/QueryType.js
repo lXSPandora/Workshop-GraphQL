@@ -1,13 +1,16 @@
 // @flow
 
 import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-import { globalIdField, connectionArgs, fromGlobalId } from 'graphql-relay';
-import { NodeInterface } from '../interface/NodeInterface';
+import { connectionArgs, fromGlobalId } from 'graphql-relay';
+import { NodeField } from '../interface/NodeInterface';
 
 import UserType from './UserType';
-import { NodeField } from '../interface/NodeInterface';
-import { UserLoader } from '../loader';
+import { UserLoader, BoardLoader, TodoLoader } from '../loader';
 import UserConnection from '../connection/UserConnection';
+import TodoType from '../type/TodoType';
+import BoardType from './BoardType';
+import BoardConnection from '../connection/BoardConnection';
+// import TodoConnection from '../connection/TodoConnection';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -39,6 +42,37 @@ export default new GraphQLObjectType({
         },
       },
       resolve: (obj, args, context) => UserLoader.loadUsers(context, args),
+    },
+    todo: {
+      type: TodoType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      resolve: (obj, args, context) => {
+        const { id } = fromGlobalId(args.id);
+        return TodoLoader.load(context, id);
+      },
+    },
+    board: {
+      type: BoardType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      resolve: (obj, args, context) => {
+        const { id } = fromGlobalId(args.id);
+        return BoardLoader.load(context, id);
+      },
+    },
+    boards: {
+      type: BoardConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
+      resolve: (obj, args, context) => BoardLoader.loadBoards(context, args),
     },
   }),
 });

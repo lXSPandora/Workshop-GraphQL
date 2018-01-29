@@ -15,4 +15,5 @@ import { graphqlPort } from './config';
 
   await app.listen(graphqlPort);
   console.log(`Server started on port ${graphqlPort}`);
+  console.log(`You can use the graphql playgroud at localhost:${graphqlPort}/playground`);
 })();
