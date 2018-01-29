@@ -6,7 +6,7 @@ import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 import { Board } from '../model';
 
 import BoardConnection from '../connection/BoardConnection';
-import * as BoardLoader from '../loader/BoardLoader';
+import { BoardLoader } from '../loader';
 
 export default mutationWithClientMutationId({
   name: 'BoardAdd',

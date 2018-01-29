@@ -4,8 +4,7 @@ import { GraphQLString, GraphQLNonNull, GraphQLList, GraphQLObjectType } from 'g
 import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 
 import { Todo } from '../model';
-
-import * as TodoLoader from '../loader/TodoLoader';
+import { TodoLoader } from '../loader';
 import TodoType from '../type/TodoType';
 
 export default mutationWithClientMutationId({

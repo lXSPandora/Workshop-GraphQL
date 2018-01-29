@@ -5,13 +5,12 @@ import { connectionArgs, fromGlobalId } from 'graphql-relay';
 import { NodeField } from '../interface/NodeInterface';
 
 import UserType from './UserType';
-import { UserLoader } from '../loader';
+import { UserLoader, BoardLoader, TodoLoader } from '../loader';
 import UserConnection from '../connection/UserConnection';
 import TodoType from '../type/TodoType';
-import * as TodoLoader from '../loader/TodoLoader';
-import * as BoardLoader from '../loader/BoardLoader';
 import BoardType from './BoardType';
 import BoardConnection from '../connection/BoardConnection';
+// import TodoConnection from '../connection/TodoConnection';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -48,7 +47,7 @@ export default new GraphQLObjectType({
       type: TodoType,
       args: {
         id: {
-          type: new GraphQLNonNull(GraphQLString),
+          type: new GraphQLNonNull(GraphQLID),
         },
       },
       resolve: (obj, args, context) => {
@@ -60,7 +59,7 @@ export default new GraphQLObjectType({
       type: BoardType,
       args: {
         id: {
-          type: new GraphQLNonNull(GraphQLString),
+          type: new GraphQLNonNull(GraphQLID),
         },
       },
       resolve: (obj, args, context) => {
@@ -70,6 +69,9 @@ export default new GraphQLObjectType({
     },
     boards: {
       type: BoardConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       resolve: (obj, args, context) => BoardLoader.loadBoards(context, args),
     },
   }),
